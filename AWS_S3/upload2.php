@@ -6,8 +6,8 @@
 
 	// AWS info
 	$bucketName = 'music-network';
-	$IAM_KEY = 'AKIAIAB5NXEYKV7NP5JA';
-	$IAM_SECRET = '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';
+	$IAM_KEY = '';
+	$IAM_SECRET = '';
 
 	try {
 			// Using hard-coded credentials
