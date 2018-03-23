@@ -1,5 +1,6 @@
 <?php
 	require_once 'header.php';
+	require_once'aws-credentials.php'; // where credentials are stored
 
 	// for AWS S3
 	require 'AWS_S3/vendor/autoload.php';
@@ -9,8 +10,9 @@
 
 	// AWS info
 	$bucketName = 'music-network';
-	$IAM_KEY = '';
-	$IAM_SECRET = '';
+	// info is fetched from aws-credentials.php
+	$IAM_KEY = $IAM_KEY; 
+	$IAM_SECRET = $IAM_SECRET;
 
 	try {
 			// using credential file - not working :(
