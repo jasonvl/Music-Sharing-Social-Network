@@ -1,56 +1,11 @@
 <?php
-	require_once 'header.php';
-	require_once'aws-credentials.php'; // where credentials are stored
-
-	// for AWS S3
-	require 'AWS_S3/vendor/autoload.php';
-	use Aws\S3\S3Client;
-	use Aws\S3\Exception\S3Exception;
-	// use Aws\Common\Credentials\Credentials;
-
-	// AWS info
-	$bucketName = 'music-network';
-	// info is fetched from aws-credentials.php
-	$IAM_KEY = $IAM_KEY; 
-	$IAM_SECRET = $IAM_SECRET;
-
-	try {
-			// using credential file - not working :(
-			// $s3 = S3Client::factory(
-			// 	array(
-   //  				'profile' => 'my_profile',
-   //  				'version' => 'latest',
-   //  				'region'  => 'us-east-1'
-   //  			));
-		
-			// Using hard-coded credentials
-			$s3 = new S3Client([
-    		'version'     => 'latest',
-    		'region'      => 'us-east-1',
-    		'credentials' => [
-        		'key'    => $IAM_KEY,
-        		'secret' => $IAM_SECRET ,
-    		],
-		]);
-	} catch (Exception $e) { //  more info https://docs.aws.amazon.com/aws-sdk-php/v3/api/class-Aws.S3.Exception.S3Exception.html
-		die("Error: " . $e->getMessage());
-	}
-
-	echo <<<_END
-	<form action="s3Upload.php" method="post" enctype="multipart/form-data">
-	    Select image to upload:
-	    <input type="file" name="fileToUpload" id="fileToUpload">
-	    <input type="submit" name="submit" value="Upload File Now">
-	</form>
-_END;
+	require_once 's3-connect.php';
 
 	$errors = []; // Store all foreseen and unforseen errors here
 	$fileExtensions = ['jpeg','JPEG','jpg','JPG','png','PNG']; // Get all the file extensions
 	$fileName = $_FILES['fileToUpload']['name'];
     $fileSize = $_FILES['fileToUpload']['size'];
     $fileExtension = strtolower(end(explode('.', $fileName)));
-
-    $userName = $user; // get user's name from header.php to use as name of bucket on S3
 
 	try {
 		// only allow certain file extensions
@@ -92,14 +47,12 @@ _END;
 		die('Error:' . $e->getMessage());
 	}
 
-	// list all items in bucket
-	$objects = $s3->getIterator('ListObjects', array(
-    "Bucket" => $bucketName,
-    "Prefix" => 'userName/' //must have the trailing forward slash "/"
-));
-
-foreach ($objects as $object) {
-    echo $object['Key'] . "<br>";
-}  
+	echo <<<_END
+	<form action="s3-file-uploader.php" method="post" enctype="multipart/form-data">
+	    Select image to upload:
+	    <input type="file" name="fileToUpload" id="fileToUpload">
+	    <input type="submit" name="submit" value="Upload File Now">
+	</form>
+_END;
 
 ?>
